@@ -50,31 +50,41 @@ def generate_combinations():
     for start in starts:
         for middle in middles:
             for end in ends:
+                if middle == end:
+                    continue
                 for autoaim in ["AutoAimLeft", "AutoAimRight"]:
                     for algae in ["High Algae", "Low Algae"]:
                         for l_command in ["L1", "L2", "L3", "L4"]:
-                            command_sequence = [
-                                {"type": "path", "data": {"pathName": f"{start} - {middle}"}},
-                                {
-                                    "type": "parallel",
-                                    "data": {
-                                        "commands": [
-                                            {"type": "named", "data": {"name": autoaim}},
-                                            {"type": "named", "data": {"name": "AutoAlign"}},
-                                            {"type": "named", "data": {"name": l_command}}
-                                        ]
-                                    }
-                                },
-                                {"type": "named", "data": {"name": "Outtake"}},
-                                {"type": "named", "data": {"name": algae}},
-                                {"type": "named", "data": {"name": "Intake"}},
-                                {"type": "path", "data": {"pathName": f"{middle} - {end}"}}
-                            ]
-                            
+                            if middle != "Algae B" or middle != "Algae M" or middle !=  "Algae T" or middle !=  "Processor":  
+                                command_sequence = [
+                                    {"type": "path", "data": {"pathName": f"{start} - {middle}"}},
+                                    {
+                                        "type": "parallel",
+                                        "data": {
+                                            "commands": [
+                                                {"type": "named", "data": {"name": autoaim}},
+                                                {"type": "named", "data": {"name": "AutoAlign"}},
+                                                {"type": "named", "data": {"name": l_command}}
+                                            ]
+                                        }
+                                    },
+                                    {"type": "named", "data": {"name": "Outtake"}},
+                                    {"type": "named", "data": {"name": algae}},
+                                    {"type": "named", "data": {"name": "Intake"}},
+                                    {"type": "path", "data": {"pathName": f"{middle} - {end}"}}
+                                ]
+                            else:
+                                command_sequence = [
+                                    {"type": "path", "data": {"pathName": f"{start} - {middle}"}},
+                                    {"type": "named", "data": {"name": "Intake"}},
+                                    {"type": "path", "data": {"pathName": f"{middle} - {end}"}}
+                                ]
                             if end == "Processor":
                                 command_sequence.append({"type": "named", "data": {"name": "Outtake"}})
-                            
-                            suffix = f"{autoaim}-{algae}-{l_command}"
+                            if middle == "Algae B" or middle == "Algae M" or middle == "Algae T" or end == "Algae B" or end == "Algae M" or end == "Algae T":
+                                suffix = ""
+                            else:
+                                suffix = f"{autoaim}-{algae}-{l_command}"
                             generate_auto_file(start, middle, end, command_sequence, suffix)
 
 generate_combinations()
