@@ -1,66 +1,80 @@
-# List of commands
-commands = [
-    "AutoAimLeft",
-    "AutoAimRight",
-    "AutoAlign",
-    "L1",
-    "L2",
-    "L3",
-    "L4",
-    "Outtake",
-    "Intake",
-    "Low Algae",
-    "High Algae"
-]
+import json
+import os
 
-# Data list from the previous script (only names)
+# Ensure the 'autos' folder exists
+os.makedirs("autos", exist_ok=True)
+
 data_names = [
     "S1", "S2", "S3", "TR", "TL", "MR", "ML", "BR", "BL", 
     "Algae T", "Algae M", "Algae B", "Processor"
 ]
 
+commands = [
+    "AutoAimLeft", "AutoAimRight", "AutoAlign", "L1", "L2", "L3", "L4", "Outtake", "Intake", "Low Algae", "High Algae"
+]
+
+def generate_auto_file(start, middle, end, command_sequence, suffix):
+    # Replace names for file naming purposes
+    suffix = suffix.replace("AutoAimLeft", "Left").replace("AutoAimRight", "Right").replace("High Algae", "High").replace("Low Algae", "Low")
+    file_name = f"autos/{start}-{middle}-{end}-{suffix}.auto"
+    file_content = {
+        "version": "2025.0",
+        "command": {
+            "type": "sequential",
+            "data": {
+                "commands": command_sequence
+            }
+        },
+        "resetOdom": True,
+        "folder": None,
+        "choreoAuto": False
+    }
+    
+    with open(file_name, "w") as f:
+        json.dump(file_content, f, indent=2)
+    print(f"Generated: {file_name}")
+
 def generate_combinations():
-    starts_input = input("Enter start elements separated by commas: ").strip().split(", ")
-    starts = [s for s in starts_input if s in data_names]
+    starts_input = input("Enter start elements separated by commas: ").strip().split(",")
+    starts = [s.strip() for s in starts_input if s.strip() in data_names]
     
-    middles_input = input("Enter middle elements separated by commas: ").strip().split(", ")
-    middles = [m for m in middles_input if m in data_names]
+    middles_input = input("Enter middle elements separated by commas: ").strip().split(",")
+    middles = [m.strip() for m in middles_input if m.strip() in data_names]
     
-    end_input = input("Enter an end element: ").strip()
-    end = end_input if end_input in data_names else None
+    end_input = input("Enter end elements separated by commas: ").strip().split(",")
+    ends = [e.strip() for e in end_input if e.strip() in data_names]
     
-    if not starts:
-        return
-    if not middles:
-        return
-    if not end:
+    if not starts or not middles or not ends:
         return
     
     for start in starts:
         for middle in middles:
-            if middle in ["TL", "TR", "ML", "MR", "BL", "BR"]:
-                for l_command in ["L1", "L2", "L3", "L4"]:
-                    # Parallel command group for AutoAimLeft, AutoAimRight, AutoAlign, and L commands
-                    parallel_group_left = f"(AutoAimLeft, AutoAlign, {l_command})"
-                    parallel_group_right = f"(AutoAimRight, AutoAlign, {l_command})"
-                    
-                    # Add Outtake and High/Low Algae based on constraints
-                    if l_command == "L2":
-                        # L2 cannot have Low Algae
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_left}, Outtake, High Algae, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_right}, Outtake, High Algae, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                    elif l_command == "L3":
-                        # L3 cannot have Low Algae or High Algae
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_left}, Outtake, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_right}, Outtake, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                    else:
-                        # L1 and L4 can have either High Algae or Low Algae
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_left}, Outtake, High Algae, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_left}, Outtake, Low Algae, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_right}, Outtake, High Algae, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-                        print(f"{start} - {middle} - {end}: {start} - {middle}, {parallel_group_right}, Outtake, Low Algae, Intake, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
-            else:
-                # Normal path without AutoAim, AutoAlign, or L commands
-                print(f"{start} - {middle} - {end}: {start} - {middle}, {middle} - {end}" + (", Outtake" if end == "Processor" else ""))
+            for end in ends:
+                for autoaim in ["AutoAimLeft", "AutoAimRight"]:
+                    for algae in ["High Algae", "Low Algae"]:
+                        for l_command in ["L1", "L2", "L3", "L4"]:
+                            command_sequence = [
+                                {"type": "path", "data": {"pathName": f"{start} - {middle}"}},
+                                {
+                                    "type": "parallel",
+                                    "data": {
+                                        "commands": [
+                                            {"type": "named", "data": {"name": autoaim}},
+                                            {"type": "named", "data": {"name": "AutoAlign"}},
+                                            {"type": "named", "data": {"name": l_command}}
+                                        ]
+                                    }
+                                },
+                                {"type": "named", "data": {"name": "Outtake"}},
+                                {"type": "named", "data": {"name": algae}},
+                                {"type": "named", "data": {"name": "Intake"}},
+                                {"type": "path", "data": {"pathName": f"{middle} - {end}"}}
+                            ]
+                            
+                            if end == "Processor":
+                                command_sequence.append({"type": "named", "data": {"name": "Outtake"}})
+                            
+                            suffix = f"{autoaim}-{algae}-{l_command}"
+                            generate_auto_file(start, middle, end, command_sequence, suffix)
 
 generate_combinations()
