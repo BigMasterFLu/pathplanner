@@ -55,7 +55,7 @@ def generate_combinations():
                     for algae in ["High Algae", "Low Algae"]:
                         for l_command in ["L1", "L2", "L3", "L4"]:
                             command_sequence = [
-                                {"type": "path", "data": {"pathName": f"{start} - {middle}"}},
+                                {"type": "path", "data": {"pathName": f"{start}-{middle}"}},
                                 {
                                     "type": "parallel",
                                     "data": {
@@ -69,7 +69,7 @@ def generate_combinations():
                                 {"type": "named", "data": {"name": "Outtake"}},
                                 {"type": "named", "data": {"name": algae}},
                                 {"type": "named", "data": {"name": "Intake"}},
-                                {"type": "path", "data": {"pathName": f"{middle} - {end}"}}
+                                {"type": "path", "data": {"pathName": f"{middle}-{end}"}}
                              ]
                             if end == "Processor":
                                 command_sequence.append({"type": "named", "data": {"name": "Outtake"}})
