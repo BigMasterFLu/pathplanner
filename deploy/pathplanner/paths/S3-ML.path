@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6372950819672134,
-        "y": 4.019006147540983
+        "x": 4.820476973684211,
+        "y": 1.94671052631579
       },
       "isLocked": false,
       "linkedName": "S3"
@@ -20,8 +20,8 @@
         "y": 4.019006147540983
       },
       "prevControl": {
-        "x": 9.103688524590162,
-        "y": 1.9
+        "x": 2.1167763157894735,
+        "y": 1.138486842105264
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,12 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0
+    "rotation": 0.0
   },
   "reversed": false,
+  "folder": "Fin",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

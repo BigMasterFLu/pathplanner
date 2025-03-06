@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.017827868852459,
-        "y": 0.8063012295081955
+        "x": 3.5181578624016248,
+        "y": 1.5507178872040108
       },
       "isLocked": false,
       "linkedName": "Algae B"
@@ -20,8 +20,8 @@
         "y": 0.8063012295081955
       },
       "prevControl": {
-        "x": 2.9141676469162734,
-        "y": 2.1848872950819667
+        "x": 4.876649781221446,
+        "y": 1.1759506841055845
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,12 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90
+    "rotation": -90.0
   },
   "reversed": false,
+  "folder": "Fin",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
