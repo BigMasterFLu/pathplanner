@@ -120,5 +120,4 @@ def generate_combinations():
                                 suffix = f"{autoaim}-{algae}-{l_command}"
                                 generate_auto_file(start, middle, end, command_sequence, suffix, wait)
         wait = True
-for i in range(10):
-    generate_combinations()
+generate_combinations()
