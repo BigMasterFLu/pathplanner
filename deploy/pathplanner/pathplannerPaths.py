@@ -8,6 +8,7 @@ def parse_input(data: str):
     entries = data.split("; ")
     
     for entry in entries:
+        print(entry)
         match = re.match(r"([\w\s]+):X:([-\d.]+),Y:([-\d.]+)", entry)
         if match:
             name, x, y = match.groups()
@@ -127,11 +128,11 @@ data = (
     "Algae T:X:2.133811475409836,Y:5.889088114754099; "
     "Algae M:X:1.9141676469162732,Y:4.019006147540983; "
     "Algae B:X:1.9141676469162732,Y:2.1848872950819667; "
-    "Processor:X:6.017827868852459,Y:0.8063012295081955;"
-    "FT:X:1.654,Y:6.824;"
+    "Processor:X:6.017827868852459,Y:0.8063012295081955; "
+    "FT:X:1.654,Y:6.824; "
     "FB:X:1.331,Y:1.298"
 )
 parsed_data = parse_input(data)
-# print("Parsed Data:", parsed_data)
+print("Parsed Data:", parsed_data)
 
 generate_combinations(parsed_data)
